@@ -47,7 +47,7 @@
       box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
     }
     
-    /* สไตล์ PDF ขาว-ดำ ทางการ (Government & Official Style) */
+    /* สไตล์ PDF ขาว-ดำ ทางการ */
     #pdf-report-content {
       font-family: 'Prompt', sans-serif;
       color: #000000;
@@ -84,7 +84,6 @@
 </head>
 <body class="bg-[#f4f9f8] min-h-screen relative overflow-x-hidden text-slate-800">
 
-  <!-- Background Decorative Orbs -->
   <div class="fixed top-[-10%] right-[-5%] w-[450px] h-[450px] rounded-full bg-teal-200/40 blur-[100px] pointer-events-none"></div>
   <div class="fixed bottom-[-10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-amber-100/60 blur-[100px] pointer-events-none"></div>
 
@@ -129,7 +128,7 @@
                 </div>
               </div>
 
-              <!-- QR Code Card -->
+              <!-- QR Code -->
               <div class="bg-white p-3 rounded-2xl shadow-2xl max-w-[260px] mx-auto group relative cursor-pointer" onclick="viewFullImage('https://s.imgz.io/2026/09/15/242429d25136c246d0ffe6.jpg')">
                 <img src="https://s.imgz.io/2026/09/15/242429d25136c246d0ffe6.jpg" alt="QR Payment" class="w-full aspect-square object-contain rounded-xl">
                 <div class="absolute inset-0 bg-black/40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold gap-1">
@@ -137,7 +136,6 @@
                 </div>
               </div>
 
-              <!-- Bank Details -->
               <div class="bg-white/10 rounded-2xl p-4 backdrop-blur-md border border-white/15 space-y-2 text-xs sm:text-sm">
                 <div class="flex justify-between border-b border-white/10 pb-1.5">
                   <span class="text-teal-200">ธนาคาร</span>
@@ -223,7 +221,7 @@
                 <div class="relative">
                   <input id="paymentSlip" type="file" accept="image/*" required class="field-input file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer">
                 </div>
-                <p class="text-[11px] text-slate-400 mt-1.5">รองรับไฟล์รูปภาพ JPG, PNG ขนาดไม่เกิน 5MB</p>
+                <p class="text-[11px] text-slate-400 mt-1.5">ระบบจะบีบอัดรูปให้อัตโนมัติ เพื่อความสะดวกรวดเร็วในการส่ง</p>
               </div>
 
               <div class="pt-2">
@@ -257,7 +255,7 @@
           </button>
         </div>
 
-        <!-- Admin Login -->
+        <!-- Login -->
         <div id="admin-login-view" class="max-w-md mx-auto py-10 text-center">
           <div class="w-16 h-16 rounded-3xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 mx-auto mb-4">
             <i data-lucide="lock" class="w-7 h-7"></i>
@@ -271,9 +269,8 @@
           </button>
         </div>
 
-        <!-- Admin Data Dashboard -->
+        <!-- Dashboard -->
         <div id="admin-data-view" class="screen-hidden space-y-6">
-          
           <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div class="bg-gradient-to-br from-teal-50 to-emerald-100/50 p-6 rounded-3xl border border-teal-100">
               <span class="text-xs font-bold uppercase tracking-wider text-teal-800">ภาพรวมยอดสั่ง</span>
@@ -300,7 +297,7 @@
             </div>
           </div>
 
-          <!-- Buttons Bar -->
+          <!-- Actions Bar -->
           <div class="flex flex-wrap items-center justify-between gap-3 pt-4">
             <div class="flex items-center gap-2">
               <h3 class="font-bold text-slate-800 text-lg">รายการคำสั่งซื้อทั้งหมด</h3>
@@ -318,7 +315,7 @@
             </div>
           </div>
 
-          <!-- Table Container -->
+          <!-- Table -->
           <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-sm bg-white">
             <table class="w-full text-left text-xs border-collapse">
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
@@ -327,13 +324,11 @@
               <tbody id="table-body" class="divide-y divide-slate-100 text-slate-600"></tbody>
             </table>
           </div>
-
         </div>
 
       </div>
     </section>
 
-    <!-- Footer Switch -->
     <footer class="mt-8 text-center">
       <button onclick="openAdmin()" class="text-xs font-medium text-slate-400 hover:text-teal-700 transition-colors inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full hover:bg-teal-50/50">
         <i data-lucide="shield" class="w-3.5 h-3.5"></i> พื้นที่สำหรับผู้ดูแลระบบ
@@ -342,7 +337,7 @@
 
   </main>
 
-  <!-- ================= ส่วนสำหรับสร้าง PDF ทางการ ================= -->
+  <!-- Container สำหรับ PDF ทางการ -->
   <div id="pdf-report-container" class="hidden">
     <div id="pdf-report-content" class="p-10 bg-white max-w-4xl mx-auto"></div>
   </div>
@@ -365,14 +360,52 @@
       });
     }
 
-    const getBase64 = (file) => new Promise((resolve, reject) => {
-      const reader = new FileReader(); 
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result); 
-      reader.onerror = error => reject(error);
-    });
+    // ⚡ ฟังก์ชันย่อและบีบอัดรูปสลิปให้เหลือ ~150KB ทันใจ (แก้ปัญหาระบบช้า)
+    function compressImageFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+          const img = new Image();
+          img.src = e.target.result;
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            let width = img.width;
+            let height = img.height;
+            const maxDim = 1200; // ขนาดคมชัดพอดีสำหรับอ่านสลิปและสแกน QR
 
-    // ================= ส่งข้อมูลลูกค้า =================
+            if (width > height) {
+              if (width > maxDim) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              }
+            } else {
+              if (height > maxDim) {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // บีบอัดภาพเป็น JPEG คุณภาพ 75% ขนาดจะเล็กลง 90% แต่ตัวหนังสือยังคมกริบ
+            const compressedBase64 = canvas.toDataURL("image/jpeg", 0.75);
+            resolve({
+              fileData: compressedBase64,
+              mimeType: "image/jpeg",
+              fileName: (file.name.split('.')[0] || 'slip') + ".jpg"
+            });
+          };
+          img.onerror = () => reject(new Error("ไม่สามารถเปิดไฟล์รูปภาพได้"));
+        };
+        reader.onerror = () => reject(new Error("การอ่านไฟล์ล้มเหลว"));
+      });
+    }
+
+    // ================= ส่งข้อมูลลูกค้า (Speed Optimized) =================
     const form = document.getElementById("shirt-order-form");
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
@@ -383,29 +416,32 @@
 
       const fileInput = document.getElementById('paymentSlip');
       const file = fileInput.files[0];
-      if (file && file.size > 5 * 1024 * 1024) {
-        Swal.fire({ icon: 'warning', title: 'ขนาดไฟล์เกินกำหนด', text: 'กรุณาแนบรูปสลิปขนาดไม่เกิน 5MB ครับ' });
+      if (!file) {
+        Swal.fire({ icon: 'warning', title: 'กรุณาแนบสลิป', text: 'โปรดแนบหลักฐานการโอนเงิน' });
         return;
       }
 
+      // แสดง Popup แจ้งกำลังประมวลผล
       Swal.fire({
         title: 'กำลังบันทึกข้อมูล...',
-        html: 'ระบบกำลังอัปโหลดข้อมูลและสลิปการโอนเงิน โปรดรอสักครู่',
+        text: 'กำลังส่งข้อมูลไปยังฐานข้อมูล โปรดรอสักครู่',
         allowOutsideClick: false,
         didOpen: () => { Swal.showLoading(); }
       });
 
       try {
-        const base64File = await getBase64(file);
+        // ย่อรูปภาพแบบเร่งด่วนในเครื่องผู้ใช้ก่อนส่ง
+        const compressed = await compressImageFile(file);
+
         const payload = {
           First_Name: document.getElementById('firstName').value.trim(),
           Last_Name: document.getElementById('lastName').value.trim(),
           Learning_Area: document.getElementById('learningArea').value,
           Shirt_Size: document.getElementById('shirtSize').value,
           Quantity: document.getElementById('quantity').value,
-          fileName: file.name,
-          mimeType: file.type,
-          fileData: base64File
+          fileName: compressed.fileName,
+          mimeType: compressed.mimeType,
+          fileData: compressed.fileData
         };
 
         const response = await fetch(GOOGLE_SCRIPT_URL, { 
@@ -461,7 +497,6 @@
       if (e.key === "Enter") fetchAdminData();
     });
 
-    // ใช้ POST ดึงข้อมูลแอดมิน (แก้ปัญหาติดสิทธิ์อีเมลโรงเรียนได้ 100%)
     async function fetchAdminData() {
       const passInput = document.getElementById("adminPassword").value.trim();
       const passwordToUse = passInput || currentAdminPassword;
@@ -473,7 +508,7 @@
 
       Swal.fire({
         title: 'กำลังโหลดข้อมูล...',
-        text: 'กำลังดึงรายการสั่งซื้อจากระบบ',
+        text: 'กำลังเชื่อมต่อฐานข้อมูล',
         allowOutsideClick: false,
         didOpen: () => { Swal.showLoading(); }
       });
@@ -545,7 +580,6 @@
       const sample = dataArray[0];
       const headers = Object.keys(sample).filter(h => h !== "_rowIndex");
       
-      // เพิ่มหัวคอลัมน์ "จัดการ"
       const thManage = document.createElement("th");
       thManage.className = "px-3 py-3.5 whitespace-nowrap text-[11px] uppercase tracking-wider text-slate-600 text-center";
       thManage.innerText = "จัดการ";
@@ -562,11 +596,10 @@
         const tr = document.createElement("tr");
         tr.className = "hover:bg-slate-50 transition-colors";
         
-        // ปุ่มลบข้อมูล
         const tdDelete = document.createElement("td");
         tdDelete.className = "px-3 py-3 whitespace-nowrap text-center";
         tdDelete.innerHTML = `
-          <button onclick="confirmDeleteRow(${row._rowIndex}, '${row.First_Name || ''} ${row.Last_Name || ''}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg transition-colors title='ลบรายการนี้'">
+          <button onclick="confirmDeleteRow(${row._rowIndex}, '${row.First_Name || ''} ${row.Last_Name || ''}')" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg transition-colors" title="ลบรายการนี้">
             <i data-lucide="trash-2" class="w-4 h-4"></i>
           </button>
         `;
@@ -580,7 +613,7 @@
           if (h === "Slip_Link" && val.startsWith("http")) {
             td.innerHTML = `
               <button onclick="viewFullImage('${val}')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 font-semibold border border-teal-200 transition-colors">
-                <i data-lucide="image" class="w-3.5 h-3.5"></i> ตรวจสอบสลิป
+                <i data-lucide="image" class="w-3.5 h-3.5"></i> ดูสลิป
               </button>`;
           } else {
             td.innerText = val;
@@ -621,16 +654,15 @@
       lucide.createIcons();
     }
 
-    // ================= ฟังก์ชันลบข้อมูล =================
     async function confirmDeleteRow(rowIndex, personName) {
       const confirm = await Swal.fire({
         title: 'ยืนยันการลบข้อมูล?',
-        text: `คุณต้องการลบรายการของ "${personName}" ออกจากฐานข้อมูลหรือไม่? (ไม่สามารถกู้คืนได้)`,
+        text: `ต้องการลบรายการของ "${personName}" หรือไม่?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#e11d48',
         cancelButtonColor: '#64748b',
-        confirmButtonText: 'ใช่, ลบข้อมูล',
+        confirmButtonText: 'ใช่, ลบเลย',
         cancelButtonText: 'ยกเลิก',
         customClass: { popup: 'rounded-3xl' }
       });
@@ -653,18 +685,17 @@
           });
           const res = await response.json();
           if (res.result === "success") {
-            Swal.fire({ icon: 'success', title: 'ลบข้อมูลสำเร็จ', timer: 1500, showConfirmButton: false });
-            fetchAdminData(); // ดึงข้อมูลใหม่อัตโนมัติ
+            Swal.fire({ icon: 'success', title: 'ลบข้อมูลเรียบร้อย', timer: 1200, showConfirmButton: false });
+            fetchAdminData();
           } else {
             throw new Error(res.message);
           }
         } catch (err) {
-          Swal.fire({ icon: 'error', title: 'ลบข้อมูลไม่สำเร็จ', text: err.message });
+          Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: err.message });
         }
       }
     }
 
-    // ================= เมนูเลือกรายงาน PDF =================
     function promptPDFChoice() {
       if (!cachedAdminData || cachedAdminData.length === 0) {
         Swal.fire({ icon: 'warning', title: 'ไม่มีข้อมูล', text: 'ยังไม่มีรายการสั่งซื้อสำหรับพิมพ์รายงาน' });
@@ -707,7 +738,6 @@
       });
     }
 
-    // ================= สร้าง PDF ทางการ (ขาว-ดำ สะอาด คมชัด) =================
     function generatePDF(type) {
       const container = document.getElementById("pdf-report-content");
       const currentDate = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -872,7 +902,6 @@
         `;
       }
 
-      // ช่องลงชื่อทางการสำหรับเสนอผู้บริหาร
       html += `
         <div style="margin-top: 35px; display: flex; justify-content: flex-end; page-break-inside: avoid;">
           <div style="text-align: center; width: 220px; font-size: 11px;">
