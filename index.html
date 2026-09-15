@@ -60,7 +60,6 @@
     
     <!-- ส่วนหัว (Header) -->
     <header class="mb-8 text-center">
-     <!-- ป้ายแท็ก -->
      <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-[#29b2a6] bg-[#e6f7f5] px-5 py-2 text-sm font-semibold text-[#1c8c82] shadow-sm">
         <i data-lucide="users" width="18" height="18"></i> 
         <span>กลุ่มงานบริหารงานบุคคล (ฝ่ายประชาสัมพันธ์)</span>
@@ -118,7 +117,6 @@
           <div><label class="mb-2 block font-semibold text-gray-700">ชื่อ</label> <input id="firstName" type="text" required class="field-control"></div>
           <div><label class="mb-2 block font-semibold text-gray-700">นามสกุล</label> <input id="lastName" type="text" required class="field-control"></div>
           
-          <!-- เปลี่ยนเป็น Dropdown กลุ่มสาระการเรียนรู้ -->
           <div class="sm:col-span-2">
             <label class="mb-2 block font-semibold text-gray-700">กลุ่มสาระการเรียนรู้ <span class="text-red-500">*</span></label> 
             <select id="learningArea" required class="field-control">
@@ -140,20 +138,25 @@
             </select>
           </div>
 
+          <!-- เปลี่ยนแปลงไซส์เสื้อตามรูปภาพ -->
           <div>
-            <label class="mb-2 block font-semibold text-gray-700">ไซส์เสื้อ</label> 
+            <label class="mb-2 block font-semibold text-gray-700">ไซส์เสื้อ (มัธยม/ผู้ใหญ่) <span class="text-red-500">*</span></label> 
             <select id="shirtSize" required class="field-control"> 
               <option value="" disabled selected>เลือกขนาด</option> 
-              <option value="S">S (รอบอก 36")</option> 
-              <option value="M">M (รอบอก 38")</option> 
-              <option value="L">L (รอบอก 40")</option> 
-              <option value="XL">XL (รอบอก 42")</option> 
-              <option value="2XL">2XL (รอบอก 44")</option> 
-              <option value="3XL">3XL (รอบอก 46")</option> 
+              <option value="S">S (รอบอก 38")</option> 
+              <option value="M">M (รอบอก 40")</option> 
+              <option value="L">L (รอบอก 42")</option> 
+              <option value="XL">XL (รอบอก 44")</option> 
+              <option value="XXL">XXL (รอบอก 46")</option> 
+              <option value="3L">3L (รอบอก 48")</option> 
+              <option value="4L">4L (รอบอก 50")</option> 
+              <option value="5L">5L (รอบอก 52")</option> 
+              <option value="6L">6L (รอบอก 54")</option> 
             </select>
           </div>
           <div><label class="mb-2 block font-semibold text-gray-700">จำนวน (ตัว)</label> <input id="quantity" type="number" min="1" max="99" value="1" required class="field-control"></div>
-          <div class="sm:col-span-2"><label class="mb-2 block font-semibold text-gray-700">แนบสลิปโอนเงิน</label> <input id="paymentSlip" type="file" accept="image/*" required class="field-control file-control"></div>
+          
+          <div class="sm:col-span-2"><label class="mb-2 block font-semibold text-gray-700">แนบสลิปโอนเงิน <span class="text-red-500">*</span></label> <input id="paymentSlip" type="file" accept="image/*" required class="field-control file-control"></div>
          </div>
          
          <p id="form-error" class="screen-hidden mt-5 rounded-xl border border-[#ffcdd2] bg-[#ffebee] px-4 py-3 text-sm font-medium text-[#c62828]"></p>
