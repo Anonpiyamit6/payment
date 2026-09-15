@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบฟอร์มสั่งเสื้อ</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.577.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #1e293b; --wine: #8c2f39; --cream: #fffaf1; --sand: #f3ead9; --gold: #d6a85f; }
+    * { box-sizing: border-box; }
+    body { font-family: "Work Sans", sans-serif; color: var(--ink); background-color: var(--cream); }
+    .order-shell { width: 100%; min-height: 100vh; position: relative; overflow: hidden; padding: 2rem 1rem; background-image: radial-gradient(rgba(140, 47, 57, 0.12) 1px, transparent 1px); background-size: 18px 18px; }
+    .form-card { box-shadow: 0 25px 60px rgba(71, 46, 35, 0.14); }
+    .field-control { width: 100%; border: 1px solid #ded4c5; border-radius: 0.75rem; padding: 0.75rem 0.9rem; background: #fffdf9; transition: all 0.2s; }
+    .field-control:focus { outline: none; border-color: var(--wine); box-shadow: 0 0 0 3px rgba(140, 47, 57, 0.13); }
+    .file-control::file-selector-button { border: 0; border-radius: 0.5rem; margin-right: 0.75rem; padding: 0.5rem 0.7rem; font-weight: 600; background: #f3ead9; color: #6e2630; cursor: pointer; }
+    .screen-hidden { display: none; }
+  </style>
+</head>
+<body>
+  <main class="order-shell flex items-center justify-center">
+   <section class="relative z-10 w-full max-w-5xl">
+    <header class="mb-7 text-center">
+     <h1 class="mx-auto max-w-2xl text-3xl font-extrabold leading-tight">แบบฟอร์มสั่งเสื้อ</h1>
+     <p class="mx-auto mt-3 max-w-xl leading-relaxed">กรุณากรอกข้อมูลและแนบสลิปโอนเงิน</p>
+    </header>
+    
+    <div id="order-panel" class="form-card overflow-hidden rounded-3xl border border-[#e9ddca] bg-[#fffdf9]">
+     <div class="grid lg:grid-cols-[0.88fr_1.12fr]">
+      
+      <!-- ส่วนแสดง QR Code -->
+      <aside class="bg-[#8c2f39] px-6 py-8 text-white sm:px-9 lg:px-10">
+       <div class="flex items-center gap-3 mb-4">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff2d7] text-[#8c2f39]"><i data-lucide="scan-line"></i></div>
+        <div><h2 class="font-bold text-xl">โอนเงินชำระค่าสินค้า</h2></div>
+       </div>
+       <p class="mt-2 text-sm">ธนาคาร: กสิกรไทย<br>เลขบัญชี: 123-4-56789-0<br>ชื่อ: นาย ตัวอย่าง ทดสอบ</p>
+       <div class="mx-auto mt-6 max-w-[245px] rounded-2xl bg-white p-3 shadow-lg">
+        
+        <!-- 🚨 แก้ไขลิงก์รูปภาพ QR Code ของคุณตรงนี้ 🚨 -->
+        <img src="https://placehold.co/400x400/eeeeee/666666?text=Your+QR+Code" alt="QR Code" class="w-full aspect-square rounded-xl object-cover">
+        
+       </div>
+      </aside>
+
+      <!-- ส่วนฟอร์ม -->
+      <div class="p-6 sm:p-9">
+       <div id="form-view">
+        <form id="shirt-order-form" novalidate>
+         <div class="grid gap-5 sm:grid-cols-2">
+          <div><label class="mb-2 block font-semibold">ชื่อ</label> <input id="firstName" type="text" required class="field-control"></div>
+          <div><label class="mb-2 block font-semibold">นามสกุล</label> <input id="lastName" type="text" required class="field-control"></div>
+          <div><label class="mb-2 block font-semibold">พื้นที่การเรียนรู้ / สาขา</label> <input id="learningArea" type="text" required class="field-control"></div>
+          <div>
+            <label class="mb-2 block font-semibold">ไซส์เสื้อ</label> 
+            <select id="shirtSize" required class="field-control"> 
+              <option value="" disabled selected>เลือกขนาด</option> 
+              <option value="S">S</option> <option value="M">M</option> <option value="L">L</option> 
+              <option value="XL">XL</option> <option value="2XL">2XL</option> <option value="3XL">3XL</option> 
+            </select>
+          </div>
+          <div><label class="mb-2 block font-semibold">จำนวน (ตัว)</label> <input id="quantity" type="number" min="1" max="99" value="1" required class="field-control"></div>
+          <div><label class="mb-2 block font-semibold">แนบสลิปโอนเงิน</label> <input id="paymentSlip" type="file" accept="image/*" required class="field-control file-control"></div>
+         </div>
+         <p id="form-error" class="screen-hidden mt-4 rounded-xl border border-[#e9afb4] bg-[#fff0f1] px-4 py-3 text-sm font-medium text-[#9f2331]"></p>
+         <button id="submit-order" type="submit" class="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-[#8c2f39] px-5 py-3.5 font-bold text-white hover:bg-[#6e2630] transition-colors">
+            <span id="submit-label">ยืนยันการสั่งซื้อ</span>
+         </button>
+        </form>
+       </div>
+
+       <!-- หน้าสำเร็จ -->
+       <section id="success-view" class="screen-hidden py-8 text-center">
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#e1f3e4] text-[#2f6f45]"><i data-lucide="check"></i></div>
+        <h2 class="mt-5 font-bold text-2xl">สั่งซื้อสำเร็จ!</h2>
+        <p class="mt-3 text-gray-600">ข้อมูลและสลิปของคุณถูกส่งเรียบร้อยแล้ว</p>
+        <button onclick="location.reload()" class="mt-7 rounded-xl bg-[#f3ead9] px-5 py-3 font-bold text-[#6e2630]">สั่งซื้อใหม่อีกครั้ง</button>
+       </section>
+
+      </div>
+     </div>
+    </div>
+   </section>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    const form = document.getElementById("shirt-order-form");
+    const submitBtn = document.getElementById("submit-order");
+    const submitLabel = document.getElementById("submit-label");
+    const errorText = document.getElementById("form-error");
+
+    // ===== เชื่อมต่อกับ Web App URL ของคุณเรียบร้อยแล้ว =====
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbze4FQcmjoxzdpiiwv6fSfZDg4DZa-U9utze02_tXiD_oDA0tWUfO7GTUgXrF-w8pll/exec"; 
+
+    // ฟังก์ชันอ่านไฟล์รูปเป็น Base64 เพื่อส่งเข้า Google Apps Script
+    const getBase64 = (file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      errorText.classList.add("screen-hidden");
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitLabel.innerText = "กำลังอัปโหลดสลิปและส่งข้อมูล...";
+
+      try {
+        const fileInput = document.getElementById('paymentSlip');
+        const file = fileInput.files[0];
+        
+        // ตรวจสอบขนาดไฟล์ไม่ให้เกิน 5MB (เพื่อป้องกัน Script Time out)
+        if (file.size > 5 * 1024 * 1024) {
+           throw new Error("ไฟล์สลิปมีขนาดใหญ่เกินไป (กรุณาใช้ไฟล์ไม่เกิน 5MB)");
+        }
+
+        const base64File = await getBase64(file);
+
+        // รวบรวมข้อมูลทั้งหมดเพื่อส่งไปยัง Google Sheet
+        const payload = {
+          First_Name: document.getElementById('firstName').value,
+          Last_Name: document.getElementById('lastName').value,
+          Learning_Area: document.getElementById('learningArea').value,
+          Shirt_Size: document.getElementById('shirtSize').value,
+          Quantity: document.getElementById('quantity').value,
+          fileName: file.name,
+          mimeType: file.type,
+          fileData: base64File
+        };
+
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+        
+        if (result.result === "success") {
+          document.getElementById("form-view").classList.add("screen-hidden");
+          document.getElementById("success-view").classList.remove("screen-hidden");
+        } else {
+          throw new Error(result.error);
+        }
+      } catch (error) {
+        errorText.innerText = error.message || "ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง";
+        errorText.classList.remove("screen-hidden");
+        console.error(error);
+      } finally {
+        submitBtn.disabled = false;
+        submitLabel.innerText = "ยืนยันการสั่งซื้อ";
+      }
+    });
+  </script>
+</body>
+</html>
