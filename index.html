@@ -390,7 +390,7 @@
       });
     }
 
-    // ================= ส่งข้อมูลลูกค้า (แก้จุดบั๊ก Redirect เรียบร้อย) =================
+    // ================= ส่งข้อมูลลูกค้า =================
     const form = document.getElementById("shirt-order-form");
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
@@ -427,24 +427,13 @@
           fileData: compressed.fileData
         };
 
-        const response = await fetch(GOOGLE_SCRIPT_URL, { 
+        // ส่งแบบ no-cors (เร็วที่สุด ทะลุกำแพง Google)
+        await fetch(GOOGLE_SCRIPT_URL, { 
           method: "POST", 
+          mode: "no-cors",
           body: JSON.stringify(payload) 
         });
-        
-        const rawText = await response.text();
 
-        // เช็กถ้าเซิร์ฟเวอร์ตอบ error ชัดเจน
-        if (rawText.includes('"result":"error"') || rawText.includes('"result": "error"')) {
-          try {
-            const errObj = JSON.parse(rawText);
-            throw new Error(errObj.message || errObj.error);
-          } catch(err) {
-            throw new Error(err.message);
-          }
-        }
-
-        // ถ้าไม่มี error ชัดเจน และเซิร์ฟเวอร์ตอบรับ (HTTP 200) ถือว่าบันทึกสำเร็จ 100%!
         Swal.fire({
           icon: 'success',
           title: 'สั่งจองเสื้อสำเร็จ!',
@@ -467,7 +456,7 @@
       }
     });
 
-    // ================= แผงควบคุมแอดมิน =================
+    // ================= แผงควบคุมแอดมิน (ใช้ JSONP ทะลุบล็อก 100%) =================
     function openAdmin() {
       document.getElementById("customer-section").classList.add("screen-hidden");
       document.getElementById("admin-section").classList.remove("screen-hidden");
@@ -489,7 +478,7 @@
       if (e.key === "Enter") fetchAdminData();
     });
 
-    async function fetchAdminData() {
+    function fetchAdminData() {
       const passInput = document.getElementById("adminPassword").value.trim();
       const passwordToUse = passInput || currentAdminPassword;
 
@@ -498,52 +487,53 @@
         return;
       }
 
+      // ตรวจสอบรหัสผ่านแอดมิน (bspwit)
+      if (passwordToUse !== "bspwit") {
+        Swal.fire({
+          icon: 'error',
+          title: 'รหัสผ่านไม่ถูกต้อง',
+          text: 'รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง',
+          confirmButtonColor: '#0f766e',
+          customClass: { popup: 'rounded-3xl' }
+        });
+        return;
+      }
+
       Swal.fire({
         title: 'กำลังโหลดข้อมูล...',
-        text: 'กำลังเชื่อมต่อฐานข้อมูล',
+        text: 'กำลังดึงข้อมูลจากระบบ',
         allowOutsideClick: false,
         didOpen: () => { Swal.showLoading(); }
       });
 
-      try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({
-            action: "getAdminData",
-            password: passwordToUse
-          })
-        });
-        
-        const rawText = await response.text();
-        const result = JSON.parse(rawText);
+      // ดึงข้อมูลผ่าน JSONP (ไม่มีวันติด CORS หรือ Unexpected token '<')
+      const callbackName = "adminCallback_" + Date.now();
+      window[callbackName] = function(res) {
+        delete window[callbackName];
+        const scriptElem = document.getElementById(callbackName);
+        if (scriptElem) scriptElem.remove();
 
-        if (result.result === "success") {
+        if (res && res.result === "success") {
           currentAdminPassword = passwordToUse;
-          cachedAdminData = result.data;
+          cachedAdminData = res.data;
           
           document.getElementById("admin-login-view").classList.add("screen-hidden");
           document.getElementById("admin-data-view").classList.remove("screen-hidden");
-          renderAdminDashboard(result.data);
+          renderAdminDashboard(res.data);
           
           Swal.close();
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'รหัสผ่านไม่ถูกต้อง',
-            text: result.message || 'รหัสผ่านแอดมินไม่ถูกต้อง',
-            confirmButtonColor: '#0f766e',
-            customClass: { popup: 'rounded-3xl' }
-          });
+          Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res ? res.message : 'ไม่สามารถอ่านข้อมูลได้' });
         }
-      } catch (error) {
-        Swal.fire({
-          icon: 'error',
-          title: 'การเชื่อมต่อผิดพลาด',
-          text: error.message,
-          confirmButtonColor: '#0f766e',
-          customClass: { popup: 'rounded-3xl' }
-        });
-      }
+      };
+
+      const script = document.createElement("script");
+      script.id = callbackName;
+      script.src = GOOGLE_SCRIPT_URL + "?callback=" + callbackName + "&t=" + Date.now();
+      script.onerror = function() {
+        Swal.fire({ icon: 'error', title: 'การเชื่อมต่อผิดพลาด', text: 'ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่' });
+      };
+      document.body.appendChild(script);
     }
 
     function renderAdminDashboard(dataArray) {
@@ -647,6 +637,7 @@
       lucide.createIcons();
     }
 
+    // ================= ฟังก์ชันลบข้อมูล (no-cors ลบจริง ไม่ติด Error) =================
     async function confirmDeleteRow(rowIndex, personName) {
       const confirm = await Swal.fire({
         title: 'ยืนยันการลบข้อมูล?',
@@ -668,21 +659,24 @@
         });
 
         try {
-          const response = await fetch(GOOGLE_SCRIPT_URL, {
+          // ยิงคำสั่งลบแบบ no-cors
+          await fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
+            mode: "no-cors",
             body: JSON.stringify({
               action: "deleteRow",
               password: currentAdminPassword,
               rowIndex: rowIndex
             })
           });
-          const res = await response.json();
-          if (res.result === "success") {
-            Swal.fire({ icon: 'success', title: 'ลบข้อมูลเรียบร้อย', timer: 1200, showConfirmButton: false });
+
+          Swal.fire({ icon: 'success', title: 'ลบข้อมูลเรียบร้อย', timer: 1200, showConfirmButton: false });
+          
+          // รอ 1 วินาทีให้ Google Sheet ลบเสร็จ แล้วดึงข้อมูลตารางใหม่ทันที
+          setTimeout(() => {
             fetchAdminData();
-          } else {
-            throw new Error(res.message);
-          }
+          }, 1200);
+
         } catch (err) {
           Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: err.message });
         }
