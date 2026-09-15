@@ -33,10 +33,6 @@
       backdrop-filter: blur(16px);
       box-shadow: 0 20px 40px -15px rgba(13, 148, 136, 0.12), 0 0 2px 1px rgba(13, 148, 136, 0.05);
     }
-    
-    .gold-gradient {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    }
 
     .luxury-gradient {
       background: linear-gradient(135deg, #0f766e 0%, #115e59 50%, #042f2e 100%);
@@ -206,8 +202,9 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">ไซส์เสื้อ <span class="text-rose-500">*</span></label>
+                  <!-- แก้ไขข้อความจาก "เลือกขนาดรอบอก" เป็น "เลือกไซส์เสื้อ" เรียบร้อย -->
                   <select id="shirtSize" required class="field-input font-medium">
-                    <option value="" disabled selected>เลือกขนาดรอบอก</option>
+                    <option value="" disabled selected>เลือกไซส์เสื้อ</option>
                     <option value="S">S (รอบอก 38")</option>
                     <option value="M">M (รอบอก 40")</option>
                     <option value="L">L (รอบอก 42")</option>
@@ -412,7 +409,6 @@
     let cachedAdminData = [];
     let currentAdminPassword = "";
 
-    // ขยายดูรูป QR หรือ สลิป
     function viewFullImage(url) {
       Swal.fire({
         imageUrl: url,
@@ -447,7 +443,6 @@
         return;
       }
 
-      // แสดง Popup Loading หรูหรา
       Swal.fire({
         title: 'กำลังบันทึกข้อมูล...',
         html: 'ระบบกำลังอัปโหลดข้อมูลและสลิปการโอนเงิน โปรดรอสักครู่',
@@ -522,7 +517,7 @@
     });
 
     async function fetchAdminData() {
-      const passInput = document.getElementById("adminPassword").value;
+      const passInput = document.getElementById("adminPassword").value.trim();
       const passwordToUse = passInput || currentAdminPassword;
 
       if (!passwordToUse) {
@@ -531,15 +526,26 @@
       }
 
       Swal.fire({
-        title: 'กำลังเข้าสู่ระบบ...',
-        text: 'กำลังดึงข้อมูลล่าสุดจากระบบฐานข้อมูล',
+        title: 'กำลังตรวจสอบ...',
+        text: 'กำลังเชื่อมต่อฐานข้อมูล Google Apps Script',
         allowOutsideClick: false,
         didOpen: () => { Swal.showLoading(); }
       });
 
       try {
-        const response = await fetch(GOOGLE_SCRIPT_URL + "?password=" + encodeURIComponent(passwordToUse));
-        const result = await response.json();
+        const response = await fetch(GOOGLE_SCRIPT_URL + "?password=" + encodeURIComponent(passwordToUse), {
+          method: "GET",
+          redirect: "follow"
+        });
+        
+        const rawText = await response.text();
+
+        // ตรวจสอบว่าสิ่งที่ได้กลับมาเป็น HTML (Google redirect/Error) หรือไม่
+        if (rawText.trim().startsWith("<") || rawText.includes("<!DOCTYPE")) {
+          throw new Error("ยังไม่ได้เปิดสิทธิ์ Web App: กรุณาไปที่ Apps Script แล้วกด Deploy > New version > Who has access: Anyone (ทุกคน)");
+        }
+
+        const result = JSON.parse(rawText);
 
         if (result.result === "success") {
           currentAdminPassword = passwordToUse;
@@ -554,7 +560,7 @@
           Swal.fire({
             icon: 'error',
             title: 'รหัสผ่านไม่ถูกต้อง',
-            text: 'กรุณาตรวจสอบรหัสผ่านผู้ดูแลระบบอีกครั้ง',
+            text: 'รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง',
             confirmButtonColor: '#0f766e',
             customClass: { popup: 'rounded-3xl' }
           });
@@ -562,9 +568,10 @@
       } catch (error) {
         Swal.fire({
           icon: 'error',
-          title: 'การเชื่อมต่อล้มเหลว',
+          title: 'การเชื่อมต่อผิดพลาด',
           text: error.message,
-          confirmButtonColor: '#0f766e'
+          confirmButtonColor: '#0f766e',
+          customClass: { popup: 'rounded-3xl' }
         });
       }
     }
@@ -596,7 +603,6 @@
       const sample = dataArray[0];
       const headers = Object.keys(sample);
       
-      // Render Table Headers
       headers.forEach(h => {
         const th = document.createElement("th");
         th.className = "px-4 py-3.5 whitespace-nowrap text-[11px] uppercase tracking-wider text-slate-600";
@@ -604,7 +610,6 @@
         thead.appendChild(th);
       });
 
-      // Render Rows
       dataArray.forEach((row, index) => {
         const tr = document.createElement("tr");
         tr.className = "hover:bg-teal-50/40 transition-colors";
@@ -626,7 +631,6 @@
         });
         tbody.appendChild(tr);
 
-        // คำนวณสรุป
         const qty = parseInt(row.Quantity) || 1;
         totalShirts += qty;
 
@@ -637,11 +641,9 @@
         areaSummary[ar] = (areaSummary[ar] || 0) + qty;
       });
 
-      // สรุปการ์ดตัวเลข
       document.getElementById("sum-people").innerText = dataArray.length;
       document.getElementById("sum-shirts").innerText = totalShirts;
 
-      // ไซส์
       for (const [size, count] of Object.entries(sizeSummary)) {
         sizeUl.innerHTML += `
           <div class="flex items-center justify-between p-2 rounded-xl bg-white/70 border border-amber-200/60 font-medium">
@@ -650,7 +652,6 @@
           </div>`;
       }
 
-      // กลุ่มสาระ
       for (const [area, count] of Object.entries(areaSummary)) {
         areaUl.innerHTML += `
           <li class="flex justify-between items-center py-1 border-b border-indigo-100/60">
@@ -669,7 +670,6 @@
         return;
       }
 
-      // เตรียมข้อมูลลงในหน้าพิมพ์ PDF
       document.getElementById("pdf-print-date").innerText = `ข้อมูล ณ วันที่: ${new Date().toLocaleString('th-TH')}`;
       document.getElementById("pdf-sum-people").innerText = cachedAdminData.length;
 
@@ -703,7 +703,6 @@
 
       const element = document.getElementById("pdf-report-content");
       
-      // ตัวเลือกการแปลง PDF
       const opt = {
         margin: [10, 10, 10, 10],
         filename: `รายงานยอดสั่งเสื้อศิลปหัตถกรรม_${new Date().toISOString().slice(0,10)}.pdf`,
