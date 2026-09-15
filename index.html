@@ -114,8 +114,8 @@
        <div id="form-view">
         <form id="shirt-order-form" novalidate>
          <div class="grid gap-5 sm:grid-cols-2">
-          <div><label class="mb-2 block font-semibold text-gray-700">ชื่อ</label> <input id="firstName" type="text" required class="field-control"></div>
-          <div><label class="mb-2 block font-semibold text-gray-700">นามสกุล</label> <input id="lastName" type="text" required class="field-control"></div>
+          <div><label class="mb-2 block font-semibold text-gray-700">ชื่อ <span class="text-red-500">*</span></label> <input id="firstName" type="text" required class="field-control"></div>
+          <div><label class="mb-2 block font-semibold text-gray-700">นามสกุล <span class="text-red-500">*</span></label> <input id="lastName" type="text" required class="field-control"></div>
           
           <div class="sm:col-span-2">
             <label class="mb-2 block font-semibold text-gray-700">กลุ่มสาระการเรียนรู้ <span class="text-red-500">*</span></label> 
@@ -138,9 +138,8 @@
             </select>
           </div>
 
-          <!-- เปลี่ยนแปลงไซส์เสื้อตามรูปภาพ -->
           <div>
-            <label class="mb-2 block font-semibold text-gray-700">ไซส์เสื้อ (มัธยม/ผู้ใหญ่) <span class="text-red-500">*</span></label> 
+            <label class="mb-2 block font-semibold text-gray-700">ไซส์เสื้อที่สั่ง <span class="text-red-500">*</span></label> 
             <select id="shirtSize" required class="field-control"> 
               <option value="" disabled selected>เลือกขนาด</option> 
               <option value="S">S (รอบอก 38")</option> 
@@ -154,7 +153,7 @@
               <option value="6L">6L (รอบอก 54")</option> 
             </select>
           </div>
-          <div><label class="mb-2 block font-semibold text-gray-700">จำนวน (ตัว)</label> <input id="quantity" type="number" min="1" max="99" value="1" required class="field-control"></div>
+          <div><label class="mb-2 block font-semibold text-gray-700">จำนวน (ตัว) <span class="text-red-500">*</span></label> <input id="quantity" type="number" min="1" max="99" value="1" required class="field-control"></div>
           
           <div class="sm:col-span-2"><label class="mb-2 block font-semibold text-gray-700">แนบสลิปโอนเงิน <span class="text-red-500">*</span></label> <input id="paymentSlip" type="file" accept="image/*" required class="field-control file-control"></div>
          </div>
