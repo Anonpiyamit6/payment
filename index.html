@@ -26,7 +26,7 @@
     }
     
     .order-shell::before, .order-shell::after {
-      content: ""; position: absolute; border-radius: 999px; pointer-events: none; filter: blur(40px);
+      content: ""; position: absolute; border-radius: 999px; pointer-events: none; filter: blur(40px); z-index: 0;
     }
     .order-shell::before {
       width: 25rem; height: 25rem; right: -10rem; top: -10rem; background: rgba(217, 160, 91, 0.15); 
@@ -35,7 +35,7 @@
       width: 20rem; height: 20rem; left: -10rem; bottom: -10rem; background: rgba(41, 178, 166, 0.15); 
     }
 
-    .form-card { box-shadow: 0 25px 50px -12px rgba(41, 178, 166, 0.15); }
+    .form-card { box-shadow: 0 25px 50px -12px rgba(41, 178, 166, 0.15); position: relative; z-index: 10; }
     
     .field-control { 
       width: 100%; border: 1px solid #cce8e5; border-radius: 0.75rem; padding: 0.75rem 0.9rem; background: #ffffff; transition: all 0.2s; 
@@ -48,52 +48,48 @@
       border: 0; border-radius: 0.5rem; margin-right: 0.75rem; padding: 0.5rem 0.7rem; font-weight: 600; 
       background: var(--teal-light); color: var(--teal-dark); cursor: pointer; transition: all 0.2s;
     }
-    .file-control::file-selector-button:hover {
-      background: #cce8e5;
-    }
-    .screen-hidden { display: none; }
+    .file-control::file-selector-button:hover { background: #cce8e5; }
+    .screen-hidden { display: none !important; }
+    
+    /* สไตล์สำหรับตารางแอดมิน */
+    .admin-table-container { overflow-x: auto; max-height: 500px; }
+    .admin-table th { background: var(--teal-primary); color: white; padding: 12px; text-align: left; white-space: nowrap; }
+    .admin-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+    .admin-table tr:hover { background-color: var(--teal-light); }
   </style>
 </head>
 <body>
-  <main class="order-shell flex items-center justify-center">
-   <section class="relative z-10 w-full max-w-5xl">
+  <main class="order-shell flex flex-col items-center justify-center">
+   
+   <!-- ================= ส่วนของฟอร์มลูกค้า ================= -->
+   <section id="customer-section" class="relative w-full max-w-5xl">
     
-    <!-- ส่วนหัว (Header) -->
-    <header class="mb-8 text-center">
+    <!-- Header -->
+    <header class="mb-8 text-center relative z-10">
      <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-[#29b2a6] bg-[#e6f7f5] px-5 py-2 text-sm font-semibold text-[#1c8c82] shadow-sm">
         <i data-lucide="users" width="18" height="18"></i> 
         <span>กลุ่มงานบริหารงานบุคคล (ฝ่ายประชาสัมพันธ์)</span>
      </div>
-     
      <h1 class="mx-auto max-w-2xl text-3xl md:text-4xl font-extrabold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-[#1c8c82] to-[#29b2a6]">
         แบบฟอร์มการชำระเงิน
      </h1>
-     
-     <p class="mx-auto mt-4 max-w-xl text-lg font-bold text-gray-700">
-        การสั่งเสื้อศิลปหัตถกรรมครั้งที่ 74
-     </p>
+     <p class="mx-auto mt-4 max-w-xl text-lg font-bold text-gray-700">การสั่งเสื้อศิลปหัตถกรรมครั้งที่ 74</p>
      <p class="mx-auto mt-1 max-w-xl text-sm md:text-base text-gray-500 leading-relaxed">
         โรงเรียนบางสะพานวิทยา<br>สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาประจวบคีรีขันธ์
      </p>
     </header>
     
-    <div id="order-panel" class="form-card overflow-hidden rounded-3xl border border-[#cce8e5] bg-white">
+    <div id="order-panel" class="form-card overflow-hidden rounded-3xl border border-[#cce8e5] bg-white relative z-10">
      <div class="grid lg:grid-cols-[0.85fr_1.15fr]">
       
-      <!-- ส่วนแสดง QR Code -->
+      <!-- QR Code Side -->
       <aside class="bg-gradient-to-br from-[#29b2a6] to-[#1c8c82] px-6 py-8 text-white sm:px-9 lg:px-10 relative overflow-hidden">
-       <div class="absolute top-0 right-0 opacity-10 transform translate-x-4 -translate-y-4">
-          <i data-lucide="shirt" width="150" height="150"></i>
-       </div>
-       
+       <div class="absolute top-0 right-0 opacity-10 transform translate-x-4 -translate-y-4"><i data-lucide="shirt" width="150" height="150"></i></div>
        <div class="relative z-10">
          <div class="flex items-center gap-3 mb-5">
-          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#fdf8ef] text-[#d9a05b] shadow-md">
-            <i data-lucide="scan-line" width="24" height="24"></i>
-          </div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#fdf8ef] text-[#d9a05b] shadow-md"><i data-lucide="scan-line" width="24" height="24"></i></div>
           <div><h2 class="font-bold text-2xl">โอนเงินชำระค่าเสื้อ</h2></div>
          </div>
-         
          <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm border border-white/20 mb-6">
            <p class="text-sm leading-relaxed">
              <strong class="text-[#fdf8ef]">ธนาคาร:</strong> กสิกรไทย<br>
@@ -101,15 +97,13 @@
              <strong class="text-[#fdf8ef]">ชื่อบัญชี:</strong> นาย ตัวอย่าง ทดสอบ
            </p>
          </div>
-         
          <div class="mx-auto max-w-[245px] rounded-2xl bg-white p-3 shadow-xl">
-          <!-- 🚨 แก้ไขลิงก์รูปภาพ QR Code ของคุณตรงนี้ 🚨 -->
           <img src="https://placehold.co/400x400/eeeeee/666666?text=Your+QR+Code" alt="QR Code" class="w-full aspect-square rounded-xl object-cover">
          </div>
        </div>
       </aside>
 
-      <!-- ส่วนฟอร์ม -->
+      <!-- Form Side -->
       <div class="p-6 sm:p-9 bg-white">
        <div id="form-view">
         <form id="shirt-order-form" novalidate>
@@ -167,7 +161,7 @@
         </form>
        </div>
 
-       <!-- หน้าสำเร็จ -->
+       <!-- Success Page -->
        <section id="success-view" class="screen-hidden py-12 text-center">
         <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#e6f7f5] text-[#1c8c82] shadow-sm mb-6">
             <i data-lucide="check-circle" width="40" height="40"></i>
@@ -178,15 +172,65 @@
             ทำรายการใหม่อีกครั้ง
         </button>
        </section>
-
       </div>
      </div>
     </div>
    </section>
+
+   <!-- ================= ส่วนของแอดมิน ================= -->
+   <section id="admin-section" class="relative w-full max-w-5xl screen-hidden z-10">
+      <div class="form-card overflow-hidden rounded-3xl border border-[#cce8e5] bg-white p-6 sm:p-9">
+         
+         <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+               <i data-lucide="lock" width="24" height="24" class="text-[#29b2a6]"></i> ข้อมูลการสั่งซื้อ (ผู้ดูแลระบบ)
+            </h2>
+            <button onclick="closeAdmin()" class="text-gray-500 hover:text-red-500 font-semibold text-sm flex items-center gap-1">
+               <i data-lucide="x" width="18" height="18"></i> ปิด
+            </button>
+         </div>
+
+         <!-- หน้าจอใส่รหัสผ่าน -->
+         <div id="admin-login-view" class="max-w-md mx-auto py-10 text-center">
+            <p class="mb-4 text-gray-600">กรุณาใส่รหัสผ่านเพื่อเข้าดูข้อมูล</p>
+            <input type="password" id="adminPassword" class="field-control text-center mb-4 text-lg" placeholder="รหัสผ่าน">
+            <p id="admin-error" class="text-red-500 text-sm mb-4 font-semibold screen-hidden"></p>
+            <button id="btn-login-admin" class="w-full rounded-xl bg-[#29b2a6] px-5 py-3 font-bold text-white hover:bg-[#1c8c82]">
+               เข้าสู่ระบบ
+            </button>
+         </div>
+
+         <!-- หน้าจอแสดงตารางข้อมูล -->
+         <div id="admin-data-view" class="screen-hidden">
+            <div class="mb-4 flex justify-between items-center">
+               <p class="text-gray-600 text-sm font-semibold">ยอดสั่งซื้อทั้งหมด: <span id="total-orders" class="text-[#29b2a6] text-lg">0</span> รายการ</p>
+               <button onclick="fetchAdminData()" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 px-3 rounded-lg flex items-center gap-1">
+                  <i data-lucide="refresh-cw" width="14" height="14"></i> รีเฟรชข้อมูล
+               </button>
+            </div>
+            <div class="admin-table-container rounded-xl border">
+               <table class="w-full admin-table text-sm">
+                  <thead>
+                     <tr id="table-head"></tr>
+                  </thead>
+                  <tbody id="table-body"></tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <!-- ปุ่มเปิดหน้าแอดมิน (ซ่อนอยู่ด้านล่างสุด) -->
+   <button onclick="openAdmin()" class="relative z-10 mt-12 text-gray-400 hover:text-[#29b2a6] text-sm flex items-center gap-1 transition-colors">
+      <i data-lucide="shield" width="14" height="14"></i> สำหรับผู้ดูแลระบบ
+   </button>
+
   </main>
 
   <script>
     lucide.createIcons();
+    
+    // ================= โค้ดส่วนลูกค้า (ส่งข้อมูล) =================
     const form = document.getElementById("shirt-order-form");
     const submitBtn = document.getElementById("submit-order");
     const submitLabel = document.getElementById("submit-label");
@@ -206,8 +250,7 @@
       errorText.classList.add("screen-hidden");
 
       if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
+        form.reportValidity(); return;
       }
 
       submitBtn.disabled = true;
@@ -218,12 +261,9 @@
         const fileInput = document.getElementById('paymentSlip');
         const file = fileInput.files[0];
         
-        if (file.size > 5 * 1024 * 1024) {
-           throw new Error("ไฟล์สลิปมีขนาดใหญ่เกินไป (กรุณาใช้ไฟล์ไม่เกิน 5MB)");
-        }
+        if (file.size > 5 * 1024 * 1024) throw new Error("ไฟล์สลิปมีขนาดใหญ่เกินไป (กรุณาใช้ไฟล์ไม่เกิน 5MB)");
 
         const base64File = await getBase64(file);
-
         const payload = {
           First_Name: document.getElementById('firstName').value,
           Last_Name: document.getElementById('lastName').value,
@@ -245,19 +285,112 @@
         if (result.result === "success") {
           document.getElementById("form-view").classList.add("screen-hidden");
           document.getElementById("success-view").classList.remove("screen-hidden");
-        } else {
-          throw new Error(result.error);
-        }
+        } else throw new Error(result.error);
       } catch (error) {
         errorText.innerText = error.message || "ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง";
         errorText.classList.remove("screen-hidden");
-        console.error(error);
       } finally {
         submitBtn.disabled = false;
         submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
         submitLabel.innerText = "ยืนยันการสั่งซื้อ";
       }
     });
+
+    // ================= โค้ดส่วนแอดมิน (ดึงข้อมูล) =================
+    let currentAdminPassword = "";
+
+    function openAdmin() {
+       document.getElementById("customer-section").classList.add("screen-hidden");
+       document.getElementById("admin-section").classList.remove("screen-hidden");
+       document.getElementById("adminPassword").focus();
+    }
+
+    function closeAdmin() {
+       document.getElementById("admin-section").classList.add("screen-hidden");
+       document.getElementById("customer-section").classList.remove("screen-hidden");
+       document.getElementById("adminPassword").value = "";
+       document.getElementById("admin-error").classList.add("screen-hidden");
+    }
+
+    document.getElementById("btn-login-admin").addEventListener("click", fetchAdminData);
+    document.getElementById("adminPassword").addEventListener("keypress", function(e) {
+       if (e.key === "Enter") fetchAdminData();
+    });
+
+    async function fetchAdminData() {
+       const passInput = document.getElementById("adminPassword").value;
+       const err = document.getElementById("admin-error");
+       const btn = document.getElementById("btn-login-admin");
+       
+       if(!passInput && !currentAdminPassword) return;
+       const passwordToUse = passInput || currentAdminPassword;
+
+       btn.innerText = "กำลังตรวจสอบ...";
+       err.classList.add("screen-hidden");
+
+       try {
+          // ส่ง GET Request พร้อมรหัสผ่าน
+          const response = await fetch(GOOGLE_SCRIPT_URL + "?password=" + encodeURIComponent(passwordToUse));
+          const result = await response.json();
+
+          if (result.result === "success") {
+             currentAdminPassword = passwordToUse; // จำรหัสผ่านไว้ใช้ตอนกดรีเฟรช
+             document.getElementById("admin-login-view").classList.add("screen-hidden");
+             document.getElementById("admin-data-view").classList.remove("screen-hidden");
+             renderTable(result.data);
+          } else {
+             err.innerText = result.message;
+             err.classList.remove("screen-hidden");
+             currentAdminPassword = "";
+          }
+       } catch (error) {
+          err.innerText = "เกิดข้อผิดพลาดในการเชื่อมต่อ";
+          err.classList.remove("screen-hidden");
+       } finally {
+          btn.innerText = "เข้าสู่ระบบ";
+       }
+    }
+
+    function renderTable(dataArray) {
+       const thead = document.getElementById("table-head");
+       const tbody = document.getElementById("table-body");
+       document.getElementById("total-orders").innerText = dataArray.length;
+       
+       thead.innerHTML = "";
+       tbody.innerHTML = "";
+
+       if (dataArray.length === 0) {
+          tbody.innerHTML = "<tr><td colspan='100%' class='text-center py-8 text-gray-500'>ยังไม่มีข้อมูลการสั่งซื้อ</td></tr>";
+          return;
+       }
+
+       // สร้างหัวตาราง
+       const headers = Object.keys(dataArray[0]);
+       headers.forEach(header => {
+          const th = document.createElement("th");
+          th.innerText = header === "Slip_Link" ? "หลักฐาน" : header;
+          thead.appendChild(th);
+       });
+
+       // สร้างเนื้อหาตาราง
+       dataArray.forEach(rowObj => {
+          const tr = document.createElement("tr");
+          headers.forEach(header => {
+             const td = document.createElement("td");
+             const val = rowObj[header];
+             
+             // ถ้าเป็นลิงก์รูปสลิป ให้ทำเป็นปุ่มกดดู
+             if (header === "Slip_Link" && val.startsWith("http")) {
+                td.innerHTML = `<a href="${val}" target="_blank" class="text-[#29b2a6] underline font-semibold"><i data-lucide="image" width="16" height="16" class="inline mr-1"></i> ดูสลิป</a>`;
+             } else {
+                td.innerText = val;
+             }
+             tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+       });
+       lucide.createIcons(); // วาดไอคอนใหม่
+    }
   </script>
 </body>
 </html>
