@@ -360,7 +360,7 @@
       });
     }
 
-    // ⚡ ฟังก์ชันย่อและบีบอัดรูปสลิปให้เหลือ ~150KB ทันใจ (แก้ปัญหาระบบช้า)
+    // ⚡ ฟังก์ชันย่อรูปสลิปให้เหลือ ~150KB ทันใจ
     function compressImageFile(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -372,7 +372,7 @@
             const canvas = document.createElement("canvas");
             let width = img.width;
             let height = img.height;
-            const maxDim = 1200; // ขนาดคมชัดพอดีสำหรับอ่านสลิปและสแกน QR
+            const maxDim = 1200;
 
             if (width > height) {
               if (width > maxDim) {
@@ -391,7 +391,6 @@
             const ctx = canvas.getContext("2d");
             ctx.drawImage(img, 0, 0, width, height);
 
-            // บีบอัดภาพเป็น JPEG คุณภาพ 75% ขนาดจะเล็กลง 90% แต่ตัวหนังสือยังคมกริบ
             const compressedBase64 = canvas.toDataURL("image/jpeg", 0.75);
             resolve({
               fileData: compressedBase64,
@@ -405,7 +404,7 @@
       });
     }
 
-    // ================= ส่งข้อมูลลูกค้า (Speed Optimized) =================
+    // ================= ส่งข้อมูลลูกค้า =================
     const form = document.getElementById("shirt-order-form");
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
@@ -421,16 +420,15 @@
         return;
       }
 
-      // แสดง Popup แจ้งกำลังประมวลผล
+      // 🛒 ปรับข้อความตอนกำลังส่ง ให้เหมือนการสั่งซื้อเสื้อผ้า
       Swal.fire({
-        title: 'กำลังบันทึกข้อมูล...',
-        text: 'กำลังส่งข้อมูลไปยังฐานข้อมูล โปรดรอสักครู่',
+        title: 'กำลังยืนยันการสั่งจองเสื้อ...',
+        text: 'ระบบกำลังตรวจสอบรายการและแนบสลิปชำระเงิน โปรดรอสักครู่นะครับ',
         allowOutsideClick: false,
         didOpen: () => { Swal.showLoading(); }
       });
 
       try {
-        // ย่อรูปภาพแบบเร่งด่วนในเครื่องผู้ใช้ก่อนส่ง
         const compressed = await compressImageFile(file);
 
         const payload = {
@@ -450,11 +448,12 @@
         });
         const result = await response.json();
 
+        // 🛒 ปรับข้อความตอนส่งสำเร็จ
         if (result.result === "success") {
           Swal.fire({
             icon: 'success',
-            title: 'ส่งข้อมูลสำเร็จ!',
-            text: 'ระบบได้รับข้อมูลการสั่งจองและหลักฐานโอนเงินเรียบร้อยแล้ว ขอบคุณครับ',
+            title: 'สั่งจองเสื้อสำเร็จ!',
+            text: 'ระบบได้รับข้อมูลการสั่งซื้อและหลักฐานการชำระเงินของคุณเรียบร้อยแล้ว ขอบคุณครับ',
             confirmButtonColor: '#0d9488',
             confirmButtonText: 'ตกลง',
             customClass: { popup: 'rounded-3xl' }
