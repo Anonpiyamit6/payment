@@ -70,7 +70,6 @@
         แบบฟอร์มการชำระเงิน
      </h1>
      
-     <!-- ปรับแก้ข้อความตามที่คุณต้องการ -->
      <p class="mx-auto mt-4 max-w-xl text-lg font-bold text-gray-700">
         การสั่งเสื้อศิลปหัตถกรรมครั้งที่ 74
      </p>
@@ -118,7 +117,29 @@
          <div class="grid gap-5 sm:grid-cols-2">
           <div><label class="mb-2 block font-semibold text-gray-700">ชื่อ</label> <input id="firstName" type="text" required class="field-control"></div>
           <div><label class="mb-2 block font-semibold text-gray-700">นามสกุล</label> <input id="lastName" type="text" required class="field-control"></div>
-          <div class="sm:col-span-2"><label class="mb-2 block font-semibold text-gray-700">พื้นที่การเรียนรู้ / โรงเรียน</label> <input id="learningArea" type="text" required class="field-control"></div>
+          
+          <!-- เปลี่ยนเป็น Dropdown กลุ่มสาระการเรียนรู้ -->
+          <div class="sm:col-span-2">
+            <label class="mb-2 block font-semibold text-gray-700">กลุ่มสาระการเรียนรู้ <span class="text-red-500">*</span></label> 
+            <select id="learningArea" required class="field-control">
+              <option value="" disabled selected>เลือกกลุ่มสาระการเรียนรู้</option>
+              <option value="ผู้บริหาร">1. ผู้บริหาร</option>
+              <option value="การงานอาชีพ">2. การงานอาชีพ</option>
+              <option value="คณิตศาสตร์">3. คณิตศาสตร์</option>
+              <option value="ภาษาไทย">4. ภาษาไทย</option>
+              <option value="วิทยาศาสตร์และเทคโนโลยี">5. วิทยาศาสตร์และเทคโนโลยี</option>
+              <option value="ศิลปะ">6. ศิลปะ</option>
+              <option value="สังคมศึกษา">7. สังคมศึกษา</option>
+              <option value="ภาษาต่างประเทศ">8. ภาษาต่างประเทศ</option>
+              <option value="สุขศึกษาและพลศึกษา">9. สุขศึกษาและพลศึกษา</option>
+              <option value="แนะแนว">10. แนะแนว</option>
+              <option value="ครูชาวต่างประเทศ">11. ครูชาวต่างประเทศ</option>
+              <option value="เจ้าหน้าที่">12. เจ้าหน้าที่</option>
+              <option value="พนักงานราชการทั่วไป">13. พนักงานราชการทั่วไป</option>
+              <option value="นักศึกษาฝึกสอน">14. นักศึกษาฝึกสอน</option>
+            </select>
+          </div>
+
           <div>
             <label class="mb-2 block font-semibold text-gray-700">ไซส์เสื้อ</label> 
             <select id="shirtSize" required class="field-control"> 
